@@ -1,0 +1,26 @@
+﻿@model MathQuizApp.Models.MathProblem
+
+<form method="post">
+    <h2>Решите пример:</h2>
+    <p>@Model.Num1 @Model.Operator @Model.Num2 = ?</p>
+
+    <input 
+        asp-for="UserAnswer"
+        class="form-control"
+        style="width: 200px; background-color:
+            @(Model.IsCorrect == true ? "lightgreen" :
+              Model.IsCorrect == false ? "lightcoral" : "" )"        
+     />
+     <span asp-validation-for="UserAnswer" class="text-danger"></span>
+
+     
+
+</form>
+@if (TempData["RedirectDelay"] != null)
+{
+    <script>
+        setTimeout(function () {
+            window.location.href = '@Url.Action("Index", "Home")';
+        }, 5000);
+    </script>
+}
