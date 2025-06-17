@@ -5,28 +5,29 @@ namespace MathQuizApp.Controllers
 {
     public class HomeController : Controller
     {
+        MathProblem _problem;
+        
 
         [HttpGet]
         public IActionResult Index()
         {
-            var problem = new MathProblem();
-            problem.Generate();
-            return View(problem);
+            _problem = new MathProblem();
+            _problem.Generate();
+            Console.Write($"{_problem.Num1}, {_problem.Num2}");
+            return View(_problem);
         }
         [HttpPost]
-        public IActionResult Index(MathProblem mathproblem)
+        public bool Submit(string useranswer)
         {
 
-            if (!int.TryParse(mathproblem.UserAnswer, out int userAnswer))
+            if (!int.TryParse(useranswer, out int userAnswer))
             {
                 ModelState.AddModelError("UserAnswer", "¬ведите число.");
-                return View(mathproblem);
+                return View(useranswer);
             }
-            mathproblem.IsCorrect = userAnswer == mathproblem.CorrectAnswer;
 
-            TempData["RedirectDelay"] = true;
-            return View(mathproblem);
-
+            Console.Write($"{_problem.Num1} {_problem.Operator} {_problem.Num2}");
+            return View($"{useranswer}");
 
         }
 

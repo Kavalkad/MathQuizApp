@@ -1,26 +1,23 @@
 ﻿@model MathQuizApp.Models.MathProblem
 
-<form method="post">
+<form method="post" id="123" asp-action="Submit" asp-controller="Home">
     <h2>Решите пример:</h2>
     <p>@Model.Num1 @Model.Operator @Model.Num2 = ?</p>
 
     <input 
-        asp-for="UserAnswer"
+        name="useranswer"
         class="form-control"
         style="width: 200px; background-color:
             @(Model.IsCorrect == true ? "lightgreen" :
               Model.IsCorrect == false ? "lightcoral" : "" )"        
      />
-     <span asp-validation-for="UserAnswer" class="text-danger"></span>
-
      
+     <span asp-validation-for="UserAnswer" class="text-danger"></span>
+     
+          <button type="submit">Отправить</button> 
 
 </form>
-@if (TempData["RedirectDelay"] != null)
-{
-    <script>
-        setTimeout(function () {
-            window.location.href = '@Url.Action("Index", "Home")';
-        }, 5000);
-    </script>
-}
+
+<script>
+    document.querySelector("#123").addEventListener("submit", (e) => {e.preventDefault()})
+</script>
