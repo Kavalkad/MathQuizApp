@@ -25,12 +25,14 @@
             return Operator == "+" ? num1 + num2 : num1 - num2;
         }
 
-        public void Generate()
+        public MathProblem Generate()
         {
             var rand = new Random();
             Num1 = rand.Next(0, 100);
             Num2 = rand.Next(0, 100);
             Operator = rand.Next(2) == 0 ? "+" : "-";
+
+            return this;
         }
     }
 }

@@ -1,37 +1,34 @@
-using MathQuizApp.Models;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using MathQuizApp.Models;
 
 namespace MathQuizApp.Controllers
 {
     public class HomeController : Controller
     {
-        MathProblem _problem;
-        
+        private static MathProblem _currentProblem;
 
         [HttpGet]
         public IActionResult Index()
         {
-            _problem = new MathProblem();
-            _problem.Generate();
-            Console.Write($"{_problem.Num1}, {_problem.Num2}");
-            return View(_problem);
+            _currentProblem = new MathProblem().Generate();
+            return View(_currentProblem);
         }
-        [HttpPost]
-        public bool Submit(string useranswer)
-        {
 
+        [HttpPost]
+        public IActionResult Index(string useranswer)
+        {
             if (!int.TryParse(useranswer, out int userAnswer))
             {
-                ModelState.AddModelError("UserAnswer", "¬‚Â‰ËÚÂ ˜ËÒÎÓ.");
-                return View(useranswer);
+
+                ModelState.AddModelError("UserAnswer", "–í–≤–µ–¥–∏—Ç–µ —á–∏—Å–ª–æ.");
+                return View(_currentProblem);
+
             }
 
-            Console.Write($"{_problem.Num1} {_problem.Operator} {_problem.Num2}");
-            return View($"{useranswer}");
+            _currentProblem.UserAnswer = useranswer;
 
+            return Json(new { isCorrect = _currentProblem.IsCorrect });
         }
-
-
-
     }
 }
