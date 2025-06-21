@@ -1,37 +1,39 @@
 using MathQuizApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+
 
 namespace MathQuizApp.Controllers
 {
     public class HomeController : Controller
     {
-        MathProblem _problem;
-        
+
+        private const string problemKey = "CurrentProblem";
 
         [HttpGet]
         public IActionResult Index()
         {
-            _problem = new MathProblem();
-            _problem.Generate();
-            Console.Write($"{_problem.Num1}, {_problem.Num2}");
-            return View(_problem);
+            var currentProblem = new MathProblem();
+            TempData[problemKey] = JsonSerializer.Serialize(currentProblem);
+            return View(currentProblem);
         }
         [HttpPost]
-        public bool Submit(string useranswer)
+        public IActionResult Index(string useranswer)
         {
-
+            var problemJson = TempData[problemKey] as string;
+            var problem = JsonSerializer.Deserialize<MathProblem>(problemJson);
             if (!int.TryParse(useranswer, out int userAnswer))
             {
-                ModelState.AddModelError("UserAnswer", "¬‚Â‰ËÚÂ ˜ËÒÎÓ.");
-                return View(useranswer);
+                ModelState.AddModelError("UserAnswer", "–í–≤–µ–¥–∏—Ç–µ —á–∏—Å–ª–æ.");
+                return View(problem);
             }
 
-            Console.Write($"{_problem.Num1} {_problem.Operator} {_problem.Num2}");
-            return View($"{useranswer}");
+            problem.UserAnswer = useranswer;
+            return Json(new { isCorrect = problem.IsCorrect });
 
         }
-
-
-
     }
 }

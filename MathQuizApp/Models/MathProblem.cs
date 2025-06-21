@@ -2,8 +2,16 @@
 {
     public class MathProblem
     {
+        public MathProblem()
+        {
+            var rand = new Random();
+            Num1 = rand.Next(0, 100);
+            Num2 = rand.Next(0, 100);
+            Operator = rand.Next(2) == 0 ? "+" : "-";
+        }
         private int _num1;
         private int _num2;
+        
 
         public int Num1
         {
@@ -16,6 +24,8 @@
             set { _num2 = value; }
         }
         public string Operator { get; set; }
+
+     
         public int CorrectAnswer => Calculate(Num1, Num2);
 
         public string UserAnswer { get; set; }
@@ -25,12 +35,5 @@
             return Operator == "+" ? num1 + num2 : num1 - num2;
         }
 
-        public void Generate()
-        {
-            var rand = new Random();
-            Num1 = rand.Next(0, 100);
-            Num2 = rand.Next(0, 100);
-            Operator = rand.Next(2) == 0 ? "+" : "-";
-        }
     }
 }

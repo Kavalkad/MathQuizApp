@@ -1,23 +1,45 @@
-﻿@model MathQuizApp.Models.MathProblem
+﻿@model MathQuizApp.Models.MathProblem;
 
-<form method="post" id="123" asp-action="Submit" asp-controller="Home">
-    <h2>Решите пример:</h2>
-    <p>@Model.Num1 @Model.Operator @Model.Num2 = ?</p>
+<div>
+    <h2>Solve this problem:</h2>
+    <p id="problem-text">@Model.Num1 @Model.Operator @Model.Num2 = ?</p>
 
-    <input 
-        name="useranswer"
-        class="form-control"
-        style="width: 200px; background-color:
-            @(Model.IsCorrect == true ? "lightgreen" :
-              Model.IsCorrect == false ? "lightcoral" : "" )"        
-     />
-     
-     <span asp-validation-for="UserAnswer" class="text-danger"></span>
-     
-          <button type="submit">Отправить</button> 
+    <form method="post" id="form" asp-action="Index" asp-controller="Home">
+        <input name="useranswer" id="user-answer" class="form-control" style="width: 200px;" />
+        
+        <span asp-validation-for="UserAnswer" class="text-danger"></span>
+        <button type="submit" class="btn btn-primary mt-2">Send</button>
+    </form>
+</div>
 
-</form>
+@section Scripts{
+    <script>
+        document.getElementById("form").addEventListener("submit", function(e) {e.preventDefault();
+        
+        const form = e.currentTarget
+        const formData = new FormData(e.currentTarget);
+        
+        fetch(e.currentTarget.action, {
+            method:'POST', 
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const answerInput = document.getElementById("user-answer");
 
-<script>
-    document.querySelector("#123").addEventListener("submit", (e) => {e.preventDefault()})
-</script>
+            if (data.isCorrect) {
+                answerInput.style.backgroundColor = "lightgreen";
+                setTimeout(() => {
+                    window.location.reload();
+                }, 5000);
+            } else {
+                answerInput.style.backgroundColor = "lightcoral";
+            }
+        })
+        .catch(error => console.error('Error:', error));
+        });
+    </script>
+}
